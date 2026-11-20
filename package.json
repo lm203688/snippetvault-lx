@@ -2,7 +2,7 @@
   "name": "snippetvault-lx",
   "displayName": "SnippetVault — Local Snippet Manager",
   "description": "Organize, search, and manage VS Code snippets locally. No cloud needed. Never lose a snippet again.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "LxStudio",
   "icon": "icon.png",
   "license": "SEE LICENSE IN LICENSE.md",
