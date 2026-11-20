@@ -1,0 +1,84 @@
+{
+  "name": "snippetvault-lx",
+  "displayName": "SnippetVault — Local Snippet Manager",
+  "description": "Organize, search, and manage VS Code snippets locally. No cloud needed. Never lose a snippet again.",
+  "version": "1.0.0",
+  "publisher": "LxStudio",
+  "icon": "icon.png",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lm203688/snippetvault-lx.git"
+  },
+  "engines": { "vscode": "^1.80.0" },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "snippet",
+    "snippet manager",
+    "code snippets",
+    "vscode snippets",
+    "local snippets",
+    "snippet organizer",
+    "snippet vault",
+    "snippet library",
+    "code library"
+  ],
+  "activationEvents": [
+    "onCommand:snippetvault.openPanel",
+    "onCommand:snippetvault.saveSnippet",
+    "onCommand:snippetvault.insertSnippet",
+    "onCommand:snippetvault.exportZip",
+    "onCommand:snippetvault.upgradeToPro",
+    "onCommand:snippetvault.activatePro",
+    "onView:snippetvault-tree"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "snippetvault.openPanel", "title": "SnippetVault: Open Manager", "category": "SnippetVault" },
+      { "command": "snippetvault.saveSnippet", "title": "SnippetVault: Save Edited Snippet", "category": "SnippetVault" },
+      { "command": "snippetvault.insertSnippet", "title": "SnippetVault: Insert Selected Snippet", "category": "SnippetVault" },
+      { "command": "snippetvault.exportZip", "title": "SnippetVault: Export All as ZIP", "category": "SnippetVault" },
+      { "command": "snippetvault.upgradeToPro", "title": "SnippetVault: Upgrade to Pro", "category": "SnippetVault" },
+      { "command": "snippetvault.activatePro", "title": "SnippetVault: Activate Pro", "category": "SnippetVault" }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "snippetvault", "title": "SnippetVault", "icon": "$(library)" }
+      ]
+    },
+    "views": {
+      "snippetvault": [
+        { "id": "snippetvault-tree", "name": "My Snippets" }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        { "command": "snippetvault.exportZip", "when": "view == snippetvault-tree", "group": "navigation@1" },
+        { "command": "snippetvault.upgradeToPro", "when": "view == snippetvault-tree", "group": "navigation@2" }
+      ]
+    },
+    "keybindings": [
+      { "command": "snippetvault.insertSnippet", "key": "ctrl+space", "when": "editorFocus && !editorHasSelection && resourceScheme == 'file'" }
+    ],
+    "configuration": {
+      "title": "SnippetVault",
+      "properties": {
+        "snippetvault.verifyEndpoint": {
+          "type": "string",
+          "default": "https://snapmark-license.61960005.workers.dev/verify",
+          "description": "License verification endpoint."
+        },
+        "snippetvault.buyoutLink": {
+          "type": "string",
+          "default": "https://snapmark-b2-checkout.pages.dev/?priceId=pri_01m7pn3zx66e4sayrywrdkv3d6",
+          "description": "Paddle checkout link for SnippetVault Pro ($7 one-time)."
+        }
+      }
+    }
+  },
+  "scripts": {},
+  "dependencies": {}
+}

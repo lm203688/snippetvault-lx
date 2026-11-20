@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnippetVault Pro — Checkout</title>
+  <meta name="description" content="Buy SnippetVault Pro: $7 one-time lifetime buyout. Unlimited local code snippets, ZIP import, and pro features. Your snippets never leave your device. Powered by Paddle.">
+  <style>
+    :root { --bg:#1f2226; --fg:#d4d4d4; --muted:#8a919c; --accent:#4c9aff; --bad:#e05c5c; --good:#4caf7d; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg); color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      padding: 20px;
+    }
+    .card {
+      text-align: center; padding: 36px 44px; max-width: 560px; width: 100%;
+      background: #262a30; border: 1px solid #33383f; border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.4);
+    }
+    .brand { font-size: 22px; font-weight: 700; margin-bottom: 4px; color: #fff; }
+    .tagline { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .features { text-align: left; margin: 0 auto 24px; max-width: 420px; font-size: 14px; line-height: 1.8; color: var(--fg); }
+    .features li { margin: 6px 0; }
+    .price-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+    .plan {
+      flex: 1; min-width: 180px; padding: 16px 12px; border: 1px solid #33383f; border-radius: 10px;
+      background: #2b3037; cursor: pointer; transition: border-color .15s, transform .1s;
+    }
+    .plan:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .plan .name { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    .plan .price { font-size: 22px; font-weight: 700; color: #fff; margin: 6px 0; }
+    .plan .note { font-size: 11px; color: var(--muted); }
+    .spinner { width: 34px; height: 34px; margin: 20px auto 16px; border: 3px solid #33383f; border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .msg { font-size: 15px; line-height: 1.5; }
+    .msg.error { color: var(--bad); }
+    .msg.muted { color: var(--muted); font-size: 13px; margin-top: 8px; }
+    .hidden { display: none !important; }
+    .footer { margin-top: 26px; font-size: 11px; color: var(--muted); }
+    .footer a { color: var(--muted); text-decoration: underline; margin: 0 6px; }
+    .footer a:hover { color: var(--accent); }
+    .secure { font-size: 11px; color: var(--good); margin-top: 14px; }
+    .deliver { margin-top: 18px; font-size: 12px; color: var(--muted); }
+    .deliver a { color: var(--muted); text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="brand">SnippetVault Pro</div>
+    <div class="tagline">Organize, access &amp; manage your code snippets locally — no cloud required.</div>
+
+    <!-- Checkout view (hidden until a plan is chosen) -->
+    <div id="checkout-view" class="hidden">
+      <div class="spinner" id="spinner"></div>
+      <div class="msg" id="msg">Preparing secure checkout&hellip;</div>
+      <div class="msg muted hidden" id="sub">You will be redirected to a secure payment window.</div>
+    </div>
+
+    <!-- Product landing view (shown by default; what reviewers see) -->
+    <div id="landing-view">
+      <ul class="features">
+        <li><strong>Unlimited snippets</strong> — remove the 100-snippet free-plan limit.</li>
+        <li><strong>ZIP import</strong> — bulk import a whole snippet library at once.</li>
+        <li><strong>Language tagging</strong> — filter &amp; find snippets by language, tag and folder.</li>
+        <li><strong>Privacy-first</strong> — snippets stay on your device; no cloud, no account.</li>
+      </ul>
+      <div class="price-row">
+        <div class="plan" data-price="pri_01m7pn3zx66e4sayrywrdkv3d6">
+          <div class="name">Lifetime</div><div class="price">$7.00</div><div class="note">one-time buyout</div>
+        </div>
+      </div>
+      <div class="secure">&#128274; Secure checkout · powered by Paddle</div>
+    </div>
+
+    <div class="footer">
+      <a href="/privacy-policy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/refund">Refund Policy</a>
+    </div>
+  </div>
+
+  <!-- Sole external script: the Paddle.js v2 payment SDK. All other code is local. -->
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <script>
+    'use strict';
+
+    var spinner = document.getElementById('spinner');
+    var msg = document.getElementById('msg');
+    var sub = document.getElementById('sub');
+    var landingView = document.getElementById('landing-view');
+    var checkoutView = document.getElementById('checkout-view');
+
+    function fail(text) {
+      spinner.classList.add('hidden');
+      sub.classList.add('hidden');
+      msg.textContent = text;
+      msg.className = 'msg error';
+    }
+
+    var paddleInited = false;
+    function ensurePaddle() {
+      if (!paddleInited) {
+        Paddle.Initialize({ token: 'live_ea1ce975c8c68b90e115d2eabfa', environment: 'production' });
+        paddleInited = true;
+      }
+    }
+
+    function start(priceId) {
+      landingView.classList.add('hidden');
+      checkoutView.classList.remove('hidden');
+      if (!window.Paddle) {
+        fail('The payment service failed to load. Please retry, or contact support.');
+        return;
+      }
+      // Paddle.js may still be finishing internal init on first load; retry once.
+      function openAttempt(attempt) {
+        try {
+          ensurePaddle();
+          Paddle.Checkout.open({
+            items: [{ priceId: priceId, quantity: 1 }]
+          });
+        } catch (e) {
+          if (attempt < 2) {
+            setTimeout(function () { openAttempt(attempt + 1); }, 600);
+          } else {
+            fail('Could not open the payment window. Please retry, or contact support.');
+          }
+        }
+      }
+      openAttempt(0);
+    }
+
+    // Product landing buttons -> start checkout with the chosen price
+    document.querySelectorAll('.plan').forEach(function (p) {
+      p.addEventListener('click', function () {
+        start(p.getAttribute('data-price'));
+      });
+    });
+
+    // Support ?priceId= deep link (used by the extension's buyout link).
+    // Delay until the page (and Paddle.js) is fully loaded, then poll briefly for
+    // the Paddle global so checkout reliably opens instead of racing the SDK load.
+    function openDeepLink(priceId) {
+      var tries = 0;
+      (function attempt() {
+        if (window.Paddle && typeof window.Paddle.Initialize === 'function') {
+          start(priceId);
+        } else if (tries < 40) { // up to ~4s
+          tries += 1;
+          setTimeout(attempt, 100);
+        } else {
+          fail('The payment service failed to load. Please retry, or contact support.');
+        }
+      })();
+    }
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var priceId = (params.get('priceId') || '').trim();
+      if (priceId) {
+        // Do not wait for window 'load': Paddle.js may block it via a lazy iframe.
+        // Poll for the Paddle global and open checkout as soon as it is ready.
+        openDeepLink(priceId);
+      }
+    })();
+  </script>
+</body>
+</html>

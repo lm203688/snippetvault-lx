@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SnippetVault — Privacy Policy</title>
+<style>body{font-family:sans-serif;max-width:720px;margin:40px auto;padding:0 20px;line-height:1.7;}h1{color:#1a3a5c;}h2{margin-top:2em;color:#24292f;}p,li{color:#444;}</style>
+</head>
+<body>
+<h1>SnippetVault Privacy Policy</h1>
+<p><strong>Last updated:</strong> 2026-11-18</p>
+
+<h2>1. Scope</h2>
+<p>SnippetVault is a <strong>local-first</strong> VS Code extension. By design:</p>
+<ul>
+<li>No analytics, telemetry, or crash reporting is collected.</li>
+<li>No data is uploaded to any server during normal use.</li>
+<li>All snippets you create, edit, or manage remain on your local machine.</li>
+</ul>
+
+<h2>2. What We Access</h2>
+<p>When installed, SnippetVault requests the following VS Code capabilities:</p>
+<ul>
+<li><strong>Workspace files</strong> — to read and write <code>.code-snippets</code> JSON files in your project and global snippets folders.</li>
+<li><strong>Active editor</strong> — to insert snippet text at your cursor position.</li>
+</ul>
+<p>We do not access network resources except when you explicitly choose to activate Pro (see §4).</p>
+
+<h2>3. License Verification (Pro Only)</h2>
+<p>If you activate a Pro license key, the extension makes a single HTTPS POST to our verification endpoint (<code>snapmark-license.workers.dev/verify</code>). The payload contains only the license key string; no snippet content, file paths, or identifying information is transmitted. The server returns a simple <code>{"valid": true/false}</code> response.</p>
+
+<h2>4. Data Retention</h2>
+<p>License keys are verified against our Cloudflare Worker backend (<code>snapmark-license.workers.dev</code>). Upon successful verification, the active status is cached in your VS Code <code>globalState</code>. Expired or revoked license keys remain in local storage but will no longer pass server-side verification. License keys stored on the server side are managed by Cloudflare KV according to their own data retention policies.</p>
+
+<h2>5. Third Parties</h2>
+<p>We do not share, sell, or expose your snippet content or personal data to any third party. Your license key is sent solely to our Cloudflare Worker for verification. Payment processing is handled by Paddle under their own privacy policy. No analytics, advertising, or telemetry providers are involved.</p>
+
+<h2>6. Children's Privacy</h2>
+<p>SnippetVault does not knowingly collect personal information from children. If you are under 16, please use the extension only with parental guidance.</p>
+
+<h2>7. Your Rights</h2>
+<p>Since we do not process personal data beyond what is strictly necessary for license verification, there is no data subject access request mechanism. You may uninstall the extension at any time to remove all locally stored state.</p>
+
+<h2>8. Contact</h2>
+<p>For privacy-related questions, email <a href="mailto:support@lxstudio.app">support@lxstudio.app</a>.</p>
+</body>
+</html>
